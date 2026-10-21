@@ -37,7 +37,9 @@ const crack = byId('foundation-crack');
   <section class="section">
     <div class="wrap story">
       <figure class="story__media">
-        <Image src={chris} alt="Chris Muse, owner of CM Home Remedies, on a lift beside a stone chimney he repointed and capped" widths={[600, 900, 1300]} sizes="(max-width: 900px) 100vw, 640px" loading="eager" style="object-position:28% 45%" />
+        <div class="story__frame">
+          <Image src={chris} alt="Chris Muse, owner of CM Home Remedies, on a lift beside a stone chimney he repointed and capped" widths={[600, 900, 1300]} sizes="(max-width: 900px) 100vw, 640px" loading="eager" style="object-position:28% 45%" />
+        </div>
         <figcaption><strong>Chris Muse</strong> · Owner, CM Home Remedies</figcaption>
       </figure>
       <div class="story__copy">
@@ -115,10 +117,11 @@ const crack = byId('foundation-crack');
   .story__media {
     margin: 0;
   }
-  .story__media {
+  .story__frame {
     position: relative;
+    margin: 0 18px 18px 0;
   }
-  .story__media::before {
+  .story__frame::before {
     content: '';
     position: absolute;
     inset: 18px -18px -18px 18px;
@@ -133,9 +136,7 @@ const crack = byId('foundation-crack');
     object-fit: cover;
   }
   .story__media figcaption {
-    position: relative;
-    z-index: 1;
-    margin-top: 30px;
+    margin-top: 16px;
   }
   .story h2 {
     font-size: clamp(40px, 5vw, 60px);
@@ -206,8 +207,11 @@ const crack = byId('foundation-crack');
     .story__media :global(img) {
       aspect-ratio: 4 / 3;
     }
-    .story__media::before {
-      inset: 10px -8px -10px 8px;
+    .story__frame {
+      margin: 0 10px 10px 0;
+    }
+    .story__frame::before {
+      inset: 10px -10px -10px 10px;
     }
   }
   @media (max-width: 600px) {
