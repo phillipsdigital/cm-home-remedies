@@ -1,0 +1,105 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+import { businessSchema, websiteSchema } from '../lib/schema';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Absolute or root-relative URL for social sharing */
+  ogImage?: string;
+  noindex?: boolean;
+  schema?: Record<string, unknown>[];
+}
+
+const { title, description, ogImage = '/og-default.jpg', noindex = false, schema = [] } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).toString();
+const ogUrl = new URL(ogImage, Astro.site ?? site.url).toString();
+const jsonLd = [businessSchema(), websiteSchema(), ...schema];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+
+    <meta name="geo.region" content="US-MO" />
+    <meta name="geo.placename" content="Joplin" />
+    <meta name="theme-color" content="#0F1012" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/icon-32.png" />
+    <link rel="apple-touch-icon" href="/icon-180.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <a class="call-bar" href={site.phoneHref}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"></path></svg>
+      Call {site.phone}
+    </a>
+  </body>
+</html>
+
+<style>
+  .call-bar {
+    display: none;
+  }
+  @media (max-width: 720px) {
+    .call-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 56px;
+      padding-bottom: env(safe-area-inset-bottom);
+      background: var(--red);
+      color: #fff;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 17px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.25);
+    }
+    .call-bar:hover {
+      color: #fff;
+    }
+    :global(body) {
+      padding-bottom: 56px;
+    }
+  }
+</style>

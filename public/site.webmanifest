@@ -1,0 +1,8 @@
+{
+  "name": "CM Home Remedies",
+  "short_name": "CM Home Remedies",
+  "icons": [{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }],
+  "theme_color": "#0F1012",
+  "background_color": "#0F1012",
+  "display": "standalone"
+}

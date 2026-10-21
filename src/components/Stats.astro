@@ -1,0 +1,63 @@
+---
+import { site } from '../data/site';
+interface Props {
+  dark?: boolean;
+}
+const { dark = true } = Astro.props;
+---
+
+<ul class:list={['stats', { 'stats--light': !dark }]}>
+  <li><span class="stats__num">{site.stats.years}</span><span class="stats__label">Years in the trades</span></li>
+  <li><span class="stats__num">{site.stats.projects}</span><span class="stats__label">Projects completed</span></li>
+  <li>
+    <span class="stats__num">
+      {site.stats.rating}
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" class="stats__star" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" /></svg>
+    </span>
+    <span class="stats__label">Google rating</span>
+  </li>
+</ul>
+
+<style>
+  .stats {
+    list-style: none;
+    margin: 0;
+    padding: 24px 0 0;
+    border-top: 1px solid #2a2d31;
+    display: flex;
+    gap: 36px;
+    flex-wrap: wrap;
+  }
+  .stats--light {
+    border-top-color: var(--line);
+  }
+  .stats li {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .stats__num {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 1.1;
+    color: #fff;
+  }
+  .stats--light .stats__num {
+    color: var(--text);
+  }
+  .stats__star {
+    color: var(--red-bright);
+  }
+  .stats__label {
+    font-size: 14px;
+    color: #9a9ea2;
+    letter-spacing: 0.04em;
+  }
+  .stats--light .stats__label {
+    color: var(--text-muted);
+  }
+</style>

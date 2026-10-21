@@ -1,0 +1,386 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/cm-mark.png';
+import { site, nav } from '../data/site';
+import { services } from '../data/services';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<div class="topbar">
+  <div class="wrap topbar__inner">
+    <span class="topbar__areas">Proudly serving Joplin &amp; the Four State Area — Missouri · Kansas · Oklahoma · Arkansas</span>
+    <span class="topbar__right">
+      <a href={site.phoneHref}>{site.phone}</a>
+      <span>Free on-site estimates</span>
+    </span>
+  </div>
+</div>
+
+<header class="header" data-header>
+  <nav class="wrap header__nav" aria-label="Main">
+    <a href="/" class="brand" aria-label={`${site.name} home`}>
+      <Image src={logo} alt="" width={68} height={46} layout="fixed" loading="eager" class="brand__mark" />
+      <span class="brand__text">
+        <span class="brand__name">CM Home Remedies</span>
+        <span class="brand__sub">Masonry · Hardscapes · Foundations</span>
+      </span>
+    </a>
+
+    <div class="menu" id="site-menu">
+      <ul class="menu__list">
+        {
+          nav.map((item) =>
+            item.label === 'Services' ? (
+              <li class="has-sub">
+                <a class:list={['menu__link', { 'is-active': isActive(item.href) }]} href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                  {item.label}
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+                </a>
+                <ul class="submenu">
+                  {services.map((s) => (
+                    <li>
+                      <a href={`/services/${s.slug}/`} aria-current={path === `/services/${s.slug}/` ? 'page' : undefined}>{s.name}</a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ) : (
+              <li>
+                <a class:list={['menu__link', { 'is-active': isActive(item.href) }]} href={item.href} aria-current={isActive(item.href) ? 'page' : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ),
+          )
+        }
+      </ul>
+      <a class="btn btn--red menu__cta-mobile" href="/contact/">Get a Free Estimate</a>
+    </div>
+
+    <div class="header__actions">
+      <a class="header__phone" href={site.phoneHref}>
+        <span class="header__phone-label">Call or text</span>
+        <span class="header__phone-num">{site.phone}</span>
+      </a>
+      <a class="btn btn--red header__cta" href="/contact/">Free Estimate</a>
+      <button class="menu-btn" type="button" aria-controls="site-menu" aria-expanded="false" aria-label="Open menu" data-menu-btn>
+        <svg class="i-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"></path></svg>
+        <svg class="i-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const btn = document.querySelector<HTMLButtonElement>('[data-menu-btn]');
+  btn?.addEventListener('click', () => {
+    const open = header?.toggleAttribute('data-open');
+    btn.setAttribute('aria-expanded', String(!!open));
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && header?.hasAttribute('data-open')) btn?.click();
+  });
+</script>
+
+<style>
+  .topbar {
+    background: var(--red);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .topbar__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-block: 9px;
+  }
+  .topbar__right {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+  .topbar a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--ink);
+    border-bottom: 1px solid #24272a;
+    color: #fff;
+  }
+  .header__nav {
+    height: 88px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: #fff;
+    flex: none;
+  }
+  .brand:hover {
+    color: #fff;
+  }
+  .brand__mark {
+    height: 46px;
+    width: auto;
+  }
+  .brand__text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+  .brand__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .brand__sub {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: #9a9ea2;
+    margin-top: 5px;
+  }
+
+  .menu__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 26px;
+  }
+  .menu__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #d6d7d8;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 12px 2px;
+    border-bottom: 2px solid transparent;
+  }
+  .menu__link:hover,
+  .menu__link.is-active {
+    color: #fff;
+    border-bottom-color: var(--red-bright);
+  }
+  .has-sub {
+    position: relative;
+  }
+  .submenu {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+    position: absolute;
+    top: 100%;
+    left: -18px;
+    min-width: 280px;
+    background: var(--ink-2);
+    border: 1px solid var(--line-dark);
+    border-top: 3px solid var(--red);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+  }
+  .has-sub:hover .submenu,
+  .has-sub:focus-within .submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+  .submenu a {
+    display: block;
+    padding: 10px 20px;
+    color: #e4e5e6;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .submenu a:hover,
+  .submenu a[aria-current='page'] {
+    background: var(--ink-3);
+    color: #fff;
+  }
+
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .header__phone {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    line-height: 1.15;
+    text-decoration: none;
+  }
+  .header__phone-label {
+    font-size: 12px;
+    color: #9a9ea2;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .header__phone-num {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .header__cta {
+    min-height: 48px;
+    padding: 0 22px;
+    font-size: 15px;
+  }
+  .menu-btn {
+    display: none;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1.5px solid #3a3d41;
+    border-radius: var(--radius);
+    color: #fff;
+    cursor: pointer;
+  }
+  .menu-btn .i-close {
+    display: none;
+  }
+  [data-open] .menu-btn .i-open {
+    display: none;
+  }
+  [data-open] .menu-btn .i-close {
+    display: block;
+  }
+  .menu__cta-mobile {
+    display: none;
+  }
+
+  .header__phone-num,
+  .header__cta {
+    white-space: nowrap;
+  }
+  @media (max-width: 1400px) {
+    .header__phone {
+      display: none;
+    }
+  }
+
+  @media (max-width: 1040px) {
+    .menu-btn {
+      display: inline-flex;
+    }
+    .menu {
+      display: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: calc(100dvh - 88px);
+      background: var(--ink);
+      overflow-y: auto;
+      padding: 16px var(--gutter) 120px;
+    }
+    [data-open] .menu {
+      display: block;
+    }
+    .menu__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+    .menu__list > li {
+      border-bottom: 1px solid var(--line-dark);
+    }
+    .menu__link {
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px;
+      padding: 18px 0;
+      border-bottom: 0;
+    }
+    .menu__link svg {
+      display: none;
+    }
+    .submenu {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      border: 0;
+      box-shadow: none;
+      background: transparent;
+      padding: 0 0 12px;
+      min-width: 0;
+    }
+    .submenu a {
+      padding: 10px 0 10px 16px;
+      color: var(--text-on-dark-muted);
+    }
+    .menu__cta-mobile {
+      display: flex;
+      width: 100%;
+      margin-top: 24px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .topbar__areas {
+      display: none;
+    }
+    .topbar__inner {
+      justify-content: center;
+    }
+    .header__cta {
+      display: none;
+    }
+    .header__nav {
+      height: 76px;
+    }
+    .menu {
+      height: calc(100dvh - 76px);
+    }
+    .brand__mark {
+      height: 38px;
+    }
+    .brand__name {
+      font-size: 19px;
+    }
+    .brand__sub {
+      font-size: 9.5px;
+      letter-spacing: 0.24em;
+    }
+  }
+</style>

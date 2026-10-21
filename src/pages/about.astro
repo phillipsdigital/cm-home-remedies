@@ -1,0 +1,219 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Stats from '../components/Stats.astro';
+import CtaBand from '../components/CtaBand.astro';
+import ServiceAreas from '../components/ServiceAreas.astro';
+import { byId } from '../data/projects';
+import { site } from '../data/site';
+import { breadcrumbSchema } from '../lib/schema';
+// Decorative stock photo (not a CM project) — no alt text on purpose.
+import heroBg from '../assets/backgrounds/bg-backyard-patio.jpg';
+import chris from '../assets/projects/chris-muse-owner-stone-chimney.jpg';
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/about/' },
+];
+const onTop = byId('brick-chimney-scaffold');
+const crack = byId('foundation-crack');
+---
+
+<BaseLayout
+  title="About CM Home Remedies & Service Areas | Joplin, MO Masonry"
+  description="Meet Chris Muse of CM Home Remedies, a family-owned masonry and landscaping contractor in Joplin, MO serving Webb City, Carthage, Neosho, Carl Junction and the Four State Area."
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    eyebrow="About us"
+    title="Family Owned. <span class='accent'>Built to Last.</span>"
+    lede="A second-generation contracting firm with more than 25 years of hands-on experience in masonry, landscaping and every space in your home."
+    crumbs={crumbs}
+    image={heroBg}
+    focus="50% 60%"
+  />
+
+  <section class="section">
+    <div class="wrap story">
+      <figure class="story__media">
+        <Image src={chris} alt="Chris Muse, owner of CM Home Remedies, on a lift beside a stone chimney he repointed and capped" widths={[600, 900, 1300]} sizes="(max-width: 900px) 100vw, 640px" loading="eager" style="object-position:28% 45%" />
+        <figcaption><strong>Chris Muse</strong> · Owner, CM Home Remedies</figcaption>
+      </figure>
+      <div class="story__copy">
+        <span class="eyebrow">Meet the owner</span>
+        <h2>Hey, I’m <span class="accent">Chris</span>.</h2>
+        <div class="prose">
+          <p class="story__lead">
+            I own CM Home Remedies, a second-generation contracting firm with more than 25 years of hands-on experience. We specialize in masonry and landscaping projects, but we offer high-quality services for every space in your home.
+          </p>
+          <p>
+            We’re built on family values and pride in craftsmanship, and we believe quality comes before everything else. My goal is simple: do the job right the first time, so you never have to call us back.
+          </p>
+          <p>
+            Every project is built to last a lifetime, using proven techniques and the attention to detail that only decades of experience can provide. As a family-owned business, we treat every home like it’s our own and every customer like family.
+          </p>
+        </div>
+        <p class="story__sign">— Chris Muse, Owner</p>
+        <Stats dark={false} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What we stand for</span>
+        <h2>Family Values, Real Craftsmanship</h2>
+      </div>
+      <ul class="values">
+        <li>
+          <h3>Quality first</h3>
+          <p>Quality comes before everything else, from the base you never see to the cap you see every day.</p>
+        </li>
+        <li>
+          <h3>Right the first time</h3>
+          <p>We do the job right so you never have to call us back.</p>
+        </li>
+        <li>
+          <h3>Built to last a lifetime</h3>
+          <p>Proven techniques and decades of experience in every wall, step and chimney.</p>
+        </li>
+        <li>
+          <h3>Treated like family</h3>
+          <p>As a family-owned business, we treat every home like our own and every customer like family.</p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap duo">
+      <figure>
+        <Image src={onTop.image} alt={onTop.alt} widths={[500, 800]} sizes="(max-width: 700px) 100vw, 600px" style="object-position:50% 30%" />
+        <figcaption>Brick chimney rebuild</figcaption>
+      </figure>
+      <figure>
+        <Image src={crack.image} alt={crack.alt} widths={[500, 800]} sizes="(max-width: 700px) 100vw, 600px" />
+        <figcaption>Exposing a cracked foundation wall before repair</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <ServiceAreas />
+
+  <CtaBand title="Let’s talk about your project" />
+</BaseLayout>
+
+<style>
+  .story {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    gap: clamp(48px, 7vw, 96px);
+    align-items: center;
+  }
+  .story__media {
+    margin: 0;
+  }
+  .story__media {
+    position: relative;
+  }
+  .story__media::before {
+    content: '';
+    position: absolute;
+    inset: 18px -18px -18px 18px;
+    border: 3px solid var(--red);
+    z-index: 0;
+  }
+  .story__media :global(img) {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .story__media figcaption {
+    position: relative;
+    z-index: 1;
+    margin-top: 30px;
+  }
+  .story h2 {
+    font-size: clamp(40px, 5vw, 60px);
+  }
+  .story__lead {
+    font-size: 21px;
+    color: var(--text);
+  }
+  .story__sign {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  figcaption {
+    font-size: 15px;
+    color: var(--text-muted);
+    padding: 12px 0;
+    border-bottom: 3px solid var(--red);
+  }
+  .story__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .values {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .values li {
+    border-top: 3px solid var(--red-bright);
+    padding-top: 20px;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  .values p {
+    color: var(--text-on-dark-muted);
+    font-size: 17px;
+  }
+  .duo {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .duo figure {
+    margin: 0;
+  }
+  .duo :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  @media (max-width: 1000px) {
+    .values {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 900px) {
+    .story {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .story__media :global(img) {
+      aspect-ratio: 4 / 3;
+    }
+    .story__media::before {
+      inset: 10px -8px -10px 8px;
+    }
+  }
+  @media (max-width: 600px) {
+    .values,
+    .duo {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
