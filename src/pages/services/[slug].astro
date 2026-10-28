@@ -1,0 +1,271 @@
+---
+import { Image, getImage } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ProjectGrid from '../../components/ProjectGrid.astro';
+import ServiceCards from '../../components/ServiceCards.astro';
+import Faq from '../../components/Faq.astro';
+import Reviews from '../../components/Reviews.astro';
+import { reviewsFor } from '../../data/reviews';
+import CtaBand from '../../components/CtaBand.astro';
+import { services, getService, type Service } from '../../data/services';
+import { byId } from '../../data/projects';
+import { site } from '../../data/site';
+import { breadcrumbSchema, serviceSchema, faqSchema } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+}
+
+const { service } = Astro.props as { service: Service };
+const hero = byId(service.heroId);
+const gallery = service.galleryIds.map(byId);
+const sideImg = gallery[1] ?? gallery[0];
+const related = service.related.map(getService);
+const svcReviews = reviewsFor(service.slug, 2);
+
+const og = await getImage({ src: hero.image, width: 1200, height: 630, fit: 'cover', format: 'jpeg' });
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Services', href: '/services/' },
+  { name: service.name, href: `/services/${service.slug}/` },
+];
+const schema = [breadcrumbSchema(crumbs), serviceSchema(service, new URL(og.src, Astro.site).toString()), faqSchema(service.faqs)];
+---
+
+<BaseLayout title={service.metaTitle} description={service.metaDescription} ogImage={og.src} schema={schema}>
+  <PageHero eyebrow="Joplin, MO · Four State Area" title={service.h1} lede={service.lede} crumbs={crumbs} image={hero.image} imageAlt={hero.alt} focus={hero.focus}>
+    <div class="btn-row">
+      <a class="btn btn--red" href="/contact/">Get a Free Estimate</a>
+      <a class="btn btn--ghost" href={site.phoneHref}>Call {site.phone}</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap intro">
+      <div class="intro__copy">
+        <span class="eyebrow">{service.name}</span>
+        <h2>{service.short} for Joplin-Area Homes</h2>
+        <div class="prose">
+          {service.intro.map((p) => <p>{p}</p>)}
+          <p class="areas-line">
+            <strong>Serving:</strong> Joplin, Webb City, Carthage, Carl Junction, Neosho, Duenweg and the Four State Area of Missouri, Kansas, Oklahoma and Arkansas. <a href="/about/#service-areas">See all service areas</a>.
+          </p>
+        </div>
+      </div>
+      <figure class="intro__media">
+        <Image src={sideImg.image} alt={sideImg.alt} widths={[500, 800, 1100]} sizes="(max-width: 900px) 100vw, 520px" style={`object-position:${sideImg.focus ?? '50% 50%'}`} />
+        <figcaption>{sideImg.title}</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section section--stone">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What we offer</span>
+        <h2>What We Build &amp; Repair</h2>
+      </div>
+      <ul class="offer">
+        {
+          service.offerings.map((o) => (
+            <li>
+              <h3>{o.title}</h3>
+              <p>{o.text}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  {
+    service.signs && (
+      <section class="section section--dark">
+        <div class="wrap signs">
+          <div class="signs__head">
+            <span class="eyebrow">Know what to look for</span>
+            <h2>{service.signsTitle}</h2>
+            <p>Spot any of these? Call before it gets worse. Small problems in masonry are almost always cheaper to fix early.</p>
+            <a class="btn btn--red" href="/contact/">Schedule an Inspection</a>
+          </div>
+          <ul class="check-list signs__list">
+            {service.signs.map((s) => <li>{s}</li>)}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Project photos</span>
+        <h2>Recent Projects: {service.short}</h2>
+      </div>
+      <ProjectGrid items={gallery} showTags={false} />
+      {
+        svcReviews.length > 0 && (
+          <div class="svc-reviews">
+            <h3>What customers say</h3>
+            <Reviews items={svcReviews} />
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section section--stone">
+    <div class="wrap faq-wrap">
+      <div class="section-head">
+        <span class="eyebrow">FAQ</span>
+        <h2>{service.short}: Common Questions</h2>
+        <p>Have a question that is not here? Call <a href={site.phoneHref}>{site.phone}</a>.</p>
+      </div>
+      <Faq faqs={service.faqs} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Related services</span>
+        <h2>More From CM Home Remedies</h2>
+      </div>
+      <ServiceCards items={related} />
+    </div>
+  </section>
+
+  <CtaBand title={`Get a free estimate on ${service.short.toLowerCase()}`} />
+</BaseLayout>
+
+<style>
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+  }
+  .intro__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .intro__media {
+    margin: 0;
+  }
+  .intro__media :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .intro__media figcaption {
+    font-size: 15px;
+    color: var(--text-muted);
+    padding-top: 12px;
+    border-bottom: 3px solid var(--red);
+    padding-bottom: 12px;
+  }
+  .areas-line {
+    font-size: 17px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .offer {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2px;
+    background: var(--line);
+    border: 2px solid var(--line);
+  }
+  .offer li {
+    background: var(--paper);
+    padding: 30px 28px 32px;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  .offer h3 {
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .offer h3::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: var(--red);
+    flex: none;
+  }
+  .offer p {
+    color: var(--text-muted);
+    font-size: 17px;
+  }
+  .signs {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 80px);
+    align-items: start;
+  }
+  .signs__head {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .signs__head p {
+    color: var(--text-on-dark-muted);
+    font-size: 19px;
+  }
+  .signs__list {
+    font-size: 19px;
+    gap: 0;
+  }
+  .signs__list li {
+    padding-block: 18px;
+    padding-left: 40px;
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .signs__list li::before {
+    top: 1.55em;
+    border-color: var(--red-bright);
+  }
+  .svc-reviews {
+    margin-top: clamp(48px, 6vw, 72px);
+    display: grid;
+    gap: 24px;
+  }
+  .svc-reviews :global(.reviews) {
+    columns: 2 320px;
+  }
+  .faq-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: clamp(32px, 6vw, 80px);
+    align-items: start;
+  }
+  @media (max-width: 1000px) {
+    .offer {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 900px) {
+    .intro,
+    .signs,
+    .faq-wrap {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .intro__media :global(img) {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  @media (max-width: 600px) {
+    .offer {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

@@ -1,0 +1,80 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+// Decorative stock photo (not a CM project)
+import bg from '../assets/backgrounds/bg-stepping-stone-path.jpg';
+import { services } from '../data/services';
+---
+
+<BaseLayout title="Page Not Found | CM Home Remedies" description="The page you are looking for could not be found." noindex>
+  <section class="section section--dark simple">
+    <Image src={bg} alt="" class="simple__bg" layout="full-width" widths={[800, 1400, 2000]} style="object-position:50% 70%" />
+    <div class="wrap simple__inner">
+      <span class="eyebrow">404</span>
+      <h1>This page has <span class="accent">gone missing</span></h1>
+      <p>The page you were looking for may have moved. Try one of these instead:</p>
+      <ul class="links">
+        {services.map((s) => <li><a href={`/services/${s.slug}/`}>{s.name}</a></li>)}
+      </ul>
+      <div class="btn-row">
+        <a class="btn btn--red" href="/">Back to Home</a>
+        <a class="btn btn--ghost" href="/contact/">Contact Us</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .simple {
+    position: relative;
+    overflow: hidden;
+  }
+  .simple__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-width: none;
+  }
+  .simple::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(15, 16, 18, 0.93) 0%, rgba(15, 16, 18, 0.8) 50%, rgba(15, 16, 18, 0.55) 100%);
+  }
+  .simple__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
+    padding-block: clamp(48px, 10vw, 120px);
+  }
+  h1 {
+    font-size: clamp(40px, 6vw, 64px);
+  }
+  p {
+    font-size: 20px;
+    color: var(--text-on-dark-muted);
+  }
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .links a {
+    display: inline-block;
+    border: 1px solid var(--line-dark);
+    padding: 10px 14px;
+    color: #fff;
+    text-decoration: none;
+  }
+  .links a:hover {
+    border-color: var(--red-bright);
+  }
+</style>

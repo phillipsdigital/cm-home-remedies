@@ -1,0 +1,554 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ServiceCards from '../components/ServiceCards.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import Stats from '../components/Stats.astro';
+import Reviews from '../components/Reviews.astro';
+import { reviews } from '../data/reviews';
+import CtaBand from '../components/CtaBand.astro';
+import { site, serviceAreas } from '../data/site';
+import { services } from '../data/services';
+import { byId } from '../data/projects';
+
+const hero = byId('brick-entry-walkway');
+const tileA = byId('flagstone-walkway-drive');
+const tileB = byId('brick-outdoor-fireplace');
+const featured = ['flagstone-walkway-curve', 'indoor-stone-fireplace', 'stone-veneer-exterior', 'tiered-retaining-wall', 'brick-mailbox-herringbone', 'brick-stone-fire-pit'].map(byId);
+const ownerShot = byId('owner-chimney');
+const moTowns = serviceAreas[0].towns.slice(0, 8);
+const hasReviews = Boolean(site.googleReviewsUrl);
+---
+
+<BaseLayout
+  title="Masonry, Hardscapes & Foundation Repair in Joplin, MO | CM Home Remedies"
+  description="CM Home Remedies builds patios, retaining walls, brick and stone masonry, and repairs chimneys and foundations across Joplin and the Four State Area. 25+ years. Call (417) 438-4330."
+>
+  <!-- HERO -->
+  <section class="hero on-dark" aria-labelledby="hero-title">
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <span class="eyebrow">Joplin, MO · Four State Area</span>
+        <h1 id="hero-title">Masonry &amp; Hardscapes <span class="accent">Built to Last</span></h1>
+        <p class="hero__lede">
+          Custom brick and stone masonry, flagstone walkways and patios, retaining walls, fireplaces, chimney and foundation repair for homeowners across Joplin, Webb City, Carthage, Neosho and the Four State Area — done right the first time by a local crew that stands behind every stone.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--red" href="/contact/">
+            Get a Free Estimate
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+          </a>
+          <a class="btn btn--ghost" href="/our-work/">See Our Work</a>
+        </div>
+        <Stats />
+      </div>
+
+      <div class="mosaic">
+        <figure class="mosaic__main">
+          <Image src={hero.image} alt={hero.alt} layout="full-width" widths={[640, 900, 1200, 1600]} sizes="(max-width: 900px) 60vw, 440px" loading="eager" fetchpriority="high" style="object-position:50% 62%" />
+          <figcaption class="tag tag--lg"><strong>Brick Entry Steps &amp; Walkway</strong><span>Brick &amp; stone masonry</span></figcaption>
+        </figure>
+        <figure>
+          <Image src={tileA.image} alt={tileA.alt} widths={[400, 700]} sizes="(max-width: 900px) 40vw, 300px" style="object-position:50% 70%" />
+          <figcaption class="tag">Flagstone Walkway</figcaption>
+        </figure>
+        <figure>
+          <Image src={tileB.image} alt={tileB.alt} widths={[400, 700]} sizes="(max-width: 900px) 40vw, 300px" style="object-position:50% 55%" />
+          <figcaption class="tag">Outdoor Fireplace</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <nav class="svc-strip" aria-label="Services">
+    <ul class="wrap">
+      {services.map((s) => <li><a href={`/services/${s.slug}/`}>{s.short}</a></li>)}
+    </ul>
+  </nav>
+
+  <!-- SERVICES -->
+  <section class="section section--stone" aria-labelledby="services-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What we build</span>
+        <h2 id="services-title">Masonry &amp; Hardscape Services in Joplin</h2>
+        <p>One local crew for the whole job: the wall, the steps, the patio, the fireplace, the chimney and the foundation.</p>
+      </div>
+      <ServiceCards />
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="section" aria-labelledby="why-title">
+    <div class="wrap why">
+      <div class="why__media">
+        <Image src={ownerShot.image} alt={ownerShot.alt} widths={[500, 800, 1100]} sizes="(max-width: 900px) 100vw, 560px" style="object-position:30% 40%" />
+      </div>
+      <div class="why__copy">
+        <span class="eyebrow">Why CM Home Remedies</span>
+        <h2 id="why-title">Built right from <span class="accent">the ground up</span></h2>
+        <p class="why__lede">
+          Most masonry problems start with what you cannot see: a thin base, no drainage, the wrong backfill. With more than 25 years in the trades, we build the part underground as carefully as the part you look at every day.
+        </p>
+        <ul class="why__list">
+          <li>
+            <h3>Owner on the job</h3>
+            <p>Chris is hands-on: up on the lift, down in the trench and laying the stone himself.</p>
+          </li>
+          <li>
+            <h3>Drainage first</h3>
+            <p>Water is what wrecks walls, patios and foundations. Every job is planned around where it goes.</p>
+          </li>
+          <li>
+            <h3>Matched to your home</h3>
+            <p>Brick, stone and mortar are matched so new work looks like it was always there.</p>
+          </li>
+          <li>
+            <h3>Start to finish</h3>
+            <p>Brick, stone, block and concrete handled by one crew, so nothing is left half-done.</p>
+          </li>
+        </ul>
+        <a class="btn btn--outline" href="/about/">About Us</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="section section--stone" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <div class="section-head">
+          <span class="eyebrow">Recent projects</span>
+          <h2 id="work-title">Our Work Around the Four States</h2>
+        </div>
+        <a class="btn btn--outline" href="/our-work/">View All Projects</a>
+      </div>
+      <ProjectGrid items={featured} />
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="section section--dark" aria-labelledby="process-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">How it works</span>
+        <h2 id="process-title">From First Call to Final Cleanup</h2>
+      </div>
+      <ol class="steps">
+        <li>
+          <span class="steps__n">01</span>
+          <h3>Call or send photos</h3>
+          <p>Tell us about the project. Photos help us get a head start.</p>
+        </li>
+        <li>
+          <span class="steps__n">02</span>
+          <h3>On-site estimate</h3>
+          <p>We look at the site, the soil and the drainage, and talk through options with you.</p>
+        </li>
+        <li>
+          <span class="steps__n">03</span>
+          <h3>Written proposal</h3>
+          <p>A clear scope, materials and price, so you know exactly what you are getting.</p>
+        </li>
+        <li>
+          <span class="steps__n">04</span>
+          <h3>Build &amp; clean up</h3>
+          <p>We do the work, keep you updated, and leave the site clean when we are done.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- REVIEWS -->
+  <section class="section section--stone" aria-labelledby="reviews-title">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <div class="section-head">
+          <span class="eyebrow">Customer reviews</span>
+          <h2 id="reviews-title">Rated {site.stats.rating} Stars by Four-State Homeowners</h2>
+        </div>
+        <a class="btn btn--outline" href={site.googleReviewsUrl} target="_blank" rel="noopener">See All Google Reviews</a>
+      </div>
+      <Reviews items={reviews.slice(0, 6)} />
+    </div>
+  </section>
+
+  <!-- AREAS + REVIEWS -->
+  <section class="section" aria-labelledby="area-title">
+    <div class="wrap split">
+      <div class="split__col">
+        <span class="eyebrow">Service area</span>
+        <h2 id="area-title">Local to Joplin. Working across the Four States.</h2>
+        <p class="split__text">
+          Based in Joplin, Missouri, we take on masonry, hardscape, chimney and foundation work throughout Jasper and Newton counties and into Southeast Kansas, Northeast Oklahoma and Northwest Arkansas.
+        </p>
+        <ul class="town-list">
+          {moTowns.map((t) => <li>{t}, MO</li>)}
+        </ul>
+        <a class="link-arrow" href="/about/#service-areas">See all service areas →</a>
+      </div>
+      <div class="review-card">
+        <div class="review-card__score">
+          <span class="review-card__num">{site.stats.rating}</span>
+          <span class="review-card__stars" aria-label={`${site.stats.rating} out of 5 stars`}>
+            {[1, 2, 3, 4, 5].map(() => <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" /></svg>)}
+          </span>
+        </div>
+        <h3>Rated {site.stats.rating} on Google</h3>
+        <p>Homeowners across the area trust us with the work that has to last. See what they have to say.</p>
+        {hasReviews ? (
+          <a class="btn btn--red" href={site.googleReviewsUrl} target="_blank" rel="noopener">Read Our Google Reviews</a>
+        ) : (
+          <span class="btn btn--red" aria-disabled="true">Read Our Google Reviews</span>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .hero {
+    background: var(--ink);
+    color: #fff;
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 56px;
+    align-items: center;
+    padding-block: 72px 64px;
+  }
+  .hero__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  h1 {
+    font-size: clamp(40px, 5.2vw, 66px);
+    line-height: 1.04;
+  }
+  .hero__lede {
+    font-size: 19px;
+    line-height: 1.6;
+    color: #c3c6c9;
+    max-width: 540px;
+  }
+  .mosaic {
+    height: 560px;
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+  }
+  .mosaic figure {
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #2e3135;
+    background: var(--ink-3);
+  }
+  .mosaic__main {
+    grid-row: 1 / 3;
+  }
+  .mosaic :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    max-width: none;
+  }
+  .tag {
+    position: absolute;
+    left: 12px;
+    bottom: 12px;
+    background: rgba(15, 16, 18, 0.88);
+    padding: 8px 12px;
+    border-left: 3px solid var(--red);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .tag--lg {
+    left: 16px;
+    bottom: 16px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tag--lg strong {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .tag--lg span {
+    font-family: var(--font-body);
+    font-size: 13px;
+    letter-spacing: 0;
+    text-transform: none;
+    color: #c3c6c9;
+    font-weight: 400;
+  }
+
+  .svc-strip {
+    background: var(--ink-2);
+    border-top: 1px solid #24272a;
+  }
+  .svc-strip ul {
+    list-style: none;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+  .svc-strip a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 68px;
+    padding: 12px 14px;
+    color: #e4e5e6;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .svc-strip a::before {
+    content: '';
+    flex: none;
+    width: 8px;
+    height: 8px;
+    background: var(--red);
+  }
+  .svc-strip a:hover {
+    color: #fff;
+    background: #1a1c1f;
+  }
+
+  .section-head--row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    max-width: none;
+  }
+  .section-head--row .section-head {
+    margin: 0;
+  }
+
+  .why {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+  }
+  .why__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    position: relative;
+  }
+  .why__media::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40%;
+    height: 8px;
+    background: var(--red);
+  }
+  .why__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .why__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: flex-start;
+  }
+  .why__lede {
+    font-size: 19px;
+    color: var(--text-muted);
+  }
+  .why__list {
+    list-style: none;
+    margin: 8px 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 32px;
+  }
+  .why__list li {
+    border-top: 3px solid var(--red);
+    padding-top: 16px;
+    display: grid;
+    gap: 8px;
+  }
+  .why__list h3 {
+    font-size: 19px;
+  }
+  .why__list p {
+    font-size: 16px;
+    color: var(--text-muted);
+  }
+
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .steps li {
+    background: var(--ink-2);
+    border: 1px solid var(--line-dark);
+    padding: 28px 24px 32px;
+    display: grid;
+    gap: 12px;
+    align-content: start;
+  }
+  .steps__n {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 40px;
+    color: var(--red-bright);
+    line-height: 1;
+  }
+  .steps p {
+    color: var(--text-on-dark-muted);
+    font-size: 16px;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(40px, 6vw, 80px);
+    align-items: center;
+  }
+  .split__col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .split__text {
+    color: var(--text-muted);
+    font-size: 19px;
+  }
+  .town-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .town-list li {
+    border: 1px solid var(--line);
+    background: var(--stone);
+    padding: 6px 12px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .link-arrow {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 15px;
+  }
+  .review-card {
+    background: var(--ink);
+    color: #fff;
+    padding: clamp(32px, 4vw, 48px);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+    border-top: 6px solid var(--red);
+  }
+  .review-card__score {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .review-card__num {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 1;
+  }
+  .review-card__stars {
+    display: flex;
+    gap: 2px;
+    color: var(--red-bright);
+  }
+  .review-card p {
+    color: var(--text-on-dark-muted);
+  }
+  .review-card [aria-disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 1100px) {
+    .svc-strip ul {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 900px) {
+    .hero__grid,
+    .why,
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .hero__grid {
+      padding-block: 48px;
+    }
+    .mosaic {
+      height: 440px;
+    }
+    .why__media {
+      aspect-ratio: 4 / 3;
+    }
+  }
+  @media (max-width: 600px) {
+    .svc-strip ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding-inline: 0;
+    }
+    .svc-strip a {
+      font-size: 13px;
+      min-height: 56px;
+      border-bottom: 1px solid #24272a;
+    }
+    .mosaic {
+      height: 420px;
+    }
+    .tag {
+      font-size: 11px;
+      padding: 6px 8px;
+      left: 8px;
+      bottom: 8px;
+    }
+    .why__list,
+    .steps {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

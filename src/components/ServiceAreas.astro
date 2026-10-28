@@ -1,0 +1,157 @@
+---
+import { serviceAreas, site } from '../data/site';
+import { services } from '../data/services';
+---
+
+  <section class="section" id="service-areas" aria-labelledby="areas-title">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Service areas</span>
+        <h2 id="areas-title">Serving Joplin &amp; the <span class="accent">Four State Area</span></h2>
+        <p>Based in Joplin, Missouri, we take on masonry, hardscape, fireplace, chimney and foundation projects throughout Southwest Missouri, Southeast Kansas, Northeast Oklahoma and Northwest Arkansas.</p>
+      </div>
+    </div>
+    <div class="wrap areas">
+      {
+        serviceAreas.map((a) => (
+          <div class:list={['area', { 'area--primary': a.primary }]}>
+            <h3>
+              {a.state}
+              {a.primary && <span class="area__badge">Home base</span>}
+            </h3>
+            <ul>
+              {a.towns.map((t) => (
+                <li>
+                  {t}, {a.abbr}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+    <div class="wrap">
+      <p class="areas__note">
+        Don’t see your town? We may still be able to help. Call <a href={site.phoneHref}>{site.phone}</a> and tell us where you are.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--stone">
+    <div class="wrap local">
+      <div class="local__copy">
+        <span class="eyebrow">Built for local conditions</span>
+        <h2>Masonry That Holds Up to Four-State Weather</h2>
+        <div class="prose">
+          <p>
+            Heavy spring storms, hot summers, freeze-thaw winters and clay soil that swells and shrinks with the seasons are hard on anything built with brick, stone and concrete. Most of the failed walls, cracked foundations and leaking chimneys we see come down to water and movement that were not planned for.
+          </p>
+          <p>
+            Every project we build in Joplin and the surrounding towns starts with a proper compacted base, drainage that moves water away, and materials suited to the climate, so the work lasts in this part of the country.
+          </p>
+        </div>
+      </div>
+      <div class="local__services">
+        <h3>Services available in every town we serve</h3>
+        <ul class="check-list">
+          {services.map((s) => <li><a href={`/services/${s.slug}/`}>{s.name}</a></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+<style>
+  .areas {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .area {
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--ink);
+    padding: 28px 26px 30px;
+  }
+  .area--primary {
+    border-top-color: var(--red);
+    grid-column: 1 / -1;
+  }
+  .area--primary ul {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .area h3 {
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .area__badge {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    background: var(--red);
+    color: #fff;
+    padding: 4px 8px;
+  }
+  .area ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+    color: var(--text-muted);
+  }
+  .areas__note {
+    margin-top: 36px;
+    font-size: 19px;
+    color: var(--text-muted);
+  }
+  .local {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    gap: clamp(40px, 6vw, 80px);
+    align-items: start;
+  }
+  .local__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .local__services {
+    background: var(--paper);
+    border-top: 4px solid var(--red);
+    padding: 32px;
+    display: grid;
+    gap: 20px;
+  }
+  .local__services h3 {
+    font-size: 20px;
+  }
+  .local__services a {
+    color: var(--text);
+    text-decoration-color: var(--line);
+    text-underline-offset: 4px;
+  }
+  .local__services a:hover {
+    color: var(--red);
+  }
+  @media (max-width: 1000px) {
+    .areas {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .area--primary ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .local {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  @media (max-width: 560px) {
+    .areas {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

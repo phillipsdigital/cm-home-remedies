@@ -1,0 +1,140 @@
+---
+import { Image } from 'astro:assets';
+import { categoryLabels, type Project } from '../data/projects';
+
+interface Props {
+  items: Project[];
+  showTags?: boolean;
+}
+const { items, showTags = true } = Astro.props;
+---
+
+<ul class="pgrid">
+  {
+    items.map((p) => (
+      <li class="pgrid__item" data-cats={p.categories.join(' ')}>
+        <figure>
+          <a href={p.image.src} class="pgrid__media" data-lightbox aria-label={`View larger: ${p.title}`}>
+            <Image src={p.image} alt={p.alt} widths={[400, 640, 900]} sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 420px" style={`object-position:${p.focus ?? '50% 50%'}`} />
+          </a>
+          <figcaption>
+            <span class="pgrid__title">{p.title}</span>
+            {showTags && <span class="pgrid__tags">{p.categories.slice(0, 2).map((c) => categoryLabels[c]).join(' · ')}</span>}
+          </figcaption>
+        </figure>
+      </li>
+    ))
+  }
+</ul>
+
+<dialog class="lightbox" data-lightbox-dialog aria-label="Project photo">
+  <button type="button" class="lightbox__close" aria-label="Close" data-lightbox-close>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+  </button>
+  <img alt="" data-lightbox-img />
+  <p data-lightbox-cap></p>
+</dialog>
+
+<script>
+  const dlg = document.querySelector<HTMLDialogElement>('[data-lightbox-dialog]');
+  const img = dlg?.querySelector<HTMLImageElement>('[data-lightbox-img]');
+  const cap = dlg?.querySelector<HTMLElement>('[data-lightbox-cap]');
+  document.querySelectorAll<HTMLAnchorElement>('[data-lightbox]').forEach((a) => {
+    a.addEventListener('click', (e) => {
+      if (!dlg || !img || !cap) return;
+      e.preventDefault();
+      const thumb = a.querySelector('img');
+      img.src = a.href;
+      img.alt = thumb?.alt ?? '';
+      cap.textContent = a.closest('figure')?.querySelector('.pgrid__title')?.textContent ?? '';
+      dlg.showModal();
+    });
+  });
+  dlg?.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dlg.close());
+  dlg?.addEventListener('click', (e) => {
+    if (e.target === dlg) dlg.close();
+  });
+</script>
+
+<style>
+  .pgrid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: 20px;
+  }
+  .pgrid__item[hidden] {
+    display: none;
+  }
+  figure {
+    margin: 0;
+  }
+  .pgrid__media {
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--ink-3);
+    cursor: zoom-in;
+  }
+  .pgrid__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s;
+  }
+  .pgrid__media:hover :global(img) {
+    transform: scale(1.04);
+  }
+  figcaption {
+    display: grid;
+    gap: 2px;
+    padding: 14px 2px 0;
+  }
+  .pgrid__title {
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.35;
+  }
+  .pgrid__tags {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+  .lightbox {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    max-width: min(1200px, 94vw);
+    max-height: 92vh;
+    overflow: visible;
+  }
+  .lightbox::backdrop {
+    background: rgba(8, 8, 10, 0.9);
+  }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 82vh;
+    width: auto;
+    margin: 0 auto;
+    object-fit: contain;
+  }
+  .lightbox p {
+    color: #e4e5e6;
+    text-align: center;
+    padding-top: 12px;
+  }
+  .lightbox__close {
+    position: absolute;
+    top: -52px;
+    right: 0;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    border: 0;
+    color: #fff;
+    cursor: pointer;
+  }
+</style>

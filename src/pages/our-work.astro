@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ProjectGrid from '../components/ProjectGrid.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { projects, categoryLabels, type Category } from '../data/projects';
+import { breadcrumbSchema } from '../lib/schema';
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Our Work', href: '/our-work/' },
+];
+const cats = Object.entries(categoryLabels) as [Category, string][];
+const counts = Object.fromEntries(cats.map(([c]) => [c, projects.filter((p) => p.categories.includes(c)).length]));
+---
+
+<BaseLayout
+  title="Our Work: Masonry & Hardscape Projects in Joplin, MO | CM Home Remedies"
+  description="Photos of retaining walls, stone porch columns, chimney rebuilds, foundation repair, patios and concrete steps completed by CM Home Remedies around Joplin and the Four State Area."
+  schema={[breadcrumbSchema(crumbs)]}
+>
+  <PageHero
+    eyebrow="Project gallery"
+    title="Our <span class='accent'>Work</span>"
+    lede="Real projects from around Joplin and the Four State Area: walls, steps, chimneys, foundations, columns and complete backyards."
+    crumbs={crumbs}
+  />
+
+  <section class="section section--stone">
+    <div class="wrap">
+      <div class="filters" role="group" aria-label="Filter projects by service">
+        <button type="button" class="chip" aria-pressed="true" data-filter="all">All <span>{projects.length}</span></button>
+        {
+          cats.map(([c, label]) => (
+            <button type="button" class="chip" aria-pressed="false" data-filter={c}>
+              {label} <span>{counts[c]}</span>
+            </button>
+          ))
+        }
+      </div>
+      <p class="sr-only" aria-live="polite" data-filter-status></p>
+      <ProjectGrid items={projects} />
+    </div>
+  </section>
+
+  <CtaBand title="Want results like these?" />
+</BaseLayout>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const items = document.querySelectorAll<HTMLElement>('[data-cats]');
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      const f = chip.dataset.filter!;
+      chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+      let n = 0;
+      items.forEach((it) => {
+        const show = f === 'all' || it.dataset.cats!.split(' ').includes(f);
+        it.hidden = !show;
+        if (show) n++;
+      });
+      if (status) status.textContent = `Showing ${n} projects`;
+    }),
+  );
+</script>
+
+<style>
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 15px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--paper);
+    color: var(--text);
+    border: 1.5px solid var(--line);
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+  .chip span {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .chip:hover {
+    border-color: var(--text);
+  }
+  .chip[aria-pressed='true'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+  .chip[aria-pressed='true'] span {
+    color: #b3b6b9;
+  }
+</style>

@@ -1,0 +1,77 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceCards from '../../components/ServiceCards.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { services } from '../../data/services';
+import { byId } from '../../data/projects';
+import { breadcrumbSchema } from '../../lib/schema';
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Services', href: '/services/' },
+];
+const hero = byId('outdoor-fireplace');
+const itemList = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: services.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: s.name,
+    url: new URL(`/services/${s.slug}/`, Astro.site).toString(),
+  })),
+};
+---
+
+<BaseLayout
+  title="Masonry & Hardscape Services in Joplin, MO | CM Home Remedies"
+  description="Hardscapes, patios, retaining walls, brick and stone masonry, fireplaces, foundation repair, chimney repair and concrete steps in Joplin and the Four State Area."
+  schema={[breadcrumbSchema(crumbs), itemList]}
+>
+  <PageHero
+    eyebrow="What we do"
+    title="Masonry &amp; Hardscape <span class='accent'>Services</span>"
+    lede="From the foundation to the chimney cap, and everything in the yard in between. One experienced crew for the whole project."
+    crumbs={crumbs}
+    image={hero.image}
+    imageAlt={hero.alt}
+    focus="50% 40%"
+  />
+
+  <section class="section section--stone">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">{services.length} core services</span>
+        <h2>Everything Built in Stone, Brick &amp; Concrete</h2>
+        <p>Choose a service to see what is involved, project photos and answers to common questions.</p>
+      </div>
+      <ServiceCards headingLevel="h2" />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap combo">
+      <span class="eyebrow">Bigger projects</span>
+      <h2>Most Jobs Are More Than One Service</h2>
+      <p>
+        A new retaining wall usually needs steps through it. A flagstone walkway looks best with a brick border to match the house. A foundation repair needs drainage and a regraded yard. Because we handle the masonry, stone and concrete in-house, you get one estimate, one schedule and one crew accountable for the finished result.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand />
+</BaseLayout>
+
+<style>
+  .combo {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 860px;
+  }
+  .combo p {
+    font-size: 20px;
+    color: var(--text-muted);
+  }
+</style>
