@@ -1,0 +1,178 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/cm-mark.png';
+import { site, nav, serviceAreas } from '../data/site';
+import { services } from '../data/services';
+
+const year = new Date().getFullYear();
+const topTowns = serviceAreas[0].towns.slice(0, 6);
+const hasEmail = site.email && !site.email.startsWith('[');
+---
+
+<footer class="footer">
+  <div class="wrap footer__grid">
+    <div class="footer__brand">
+      <a href="/" class="footer__logo" aria-label={`${site.name} home`}>
+        <Image src={logo} alt="" width={88} height={60} layout="fixed" />
+        <span>CM Home Remedies</span>
+      </a>
+      <p>
+        Custom masonry, hardscapes, retaining walls, chimney and foundation repair for homeowners in Joplin, MO and across the Four State Area.
+      </p>
+      <a class="footer__phone" href={site.phoneHref}>{site.phone}</a>
+      {hasEmail && <a class="footer__email" href={`mailto:${site.email}`}>{site.email}</a>}
+    </div>
+
+    <nav class="footer__col" aria-label="Services">
+      <h2 class="footer__title">Services</h2>
+      <ul>
+        {services.map((s) => <li><a href={`/services/${s.slug}/`}>{s.name}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav class="footer__col" aria-label="Company">
+      <h2 class="footer__title">Company</h2>
+      <ul>
+        {nav.filter((n) => n.href !== '/').map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="footer__col">
+      <h2 class="footer__title">Service Area</h2>
+      <ul>
+        {topTowns.map((t) => <li>{t}, MO</li>)}
+        <li><a href="/about/#service-areas">+ Kansas, Oklahoma &amp; Arkansas</a></li>
+      </ul>
+      {
+        site.hours.length > 0 && (
+          <>
+            <h2 class="footer__title footer__title--spaced">Hours</h2>
+            <ul>
+              {site.hours.map((h) => (
+                <li>
+                  {h.days}: {h.label}
+                </li>
+              ))}
+            </ul>
+          </>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="footer__bottom">
+    <div class="wrap footer__bottom-inner">
+      <span>&copy; {year} {site.legalName}. All rights reserved.</span>
+      <span>Site by: <a class="footer__credit" href="https://phillipsdigitalsolutions.com" target="_blank" rel="noopener">Phillips Digital</a></span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--ink);
+    color: var(--text-on-dark-muted);
+    font-size: 16px;
+    border-top: 4px solid var(--red);
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+    gap: 48px;
+    padding-block: 72px 56px;
+  }
+  .footer__logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: #fff;
+    text-decoration: none;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .footer__logo:hover {
+    color: #fff;
+  }
+  .footer__logo img {
+    height: 50px;
+    width: auto;
+  }
+  .footer__brand p {
+    max-width: 380px;
+    margin-bottom: 20px;
+  }
+  .footer__phone {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 26px;
+    color: #fff;
+    text-decoration: none;
+  }
+  .footer__phone:hover {
+    color: var(--red-bright);
+  }
+  .footer__email {
+    color: var(--text-on-dark-muted);
+  }
+  .footer__title {
+    font-size: 15px;
+    letter-spacing: 0.16em;
+    color: #fff;
+    margin-bottom: 18px;
+    font-weight: 600;
+  }
+  .footer__title--spaced {
+    margin-top: 32px;
+  }
+  .footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .footer__col a {
+    color: var(--text-on-dark-muted);
+    text-decoration: none;
+  }
+  .footer__col a:hover {
+    color: #fff;
+  }
+  .footer__bottom {
+    border-top: 1px solid var(--line-dark);
+    font-size: 14px;
+  }
+  .footer__credit {
+    color: #fff;
+    text-decoration: none;
+  }
+  .footer__credit:hover {
+    color: var(--red-bright);
+  }
+  .footer__bottom-inner {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-block: 20px;
+  }
+  @media (max-width: 960px) {
+    .footer__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 560px) {
+    .footer__grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 36px;
+    }
+  }
+</style>
