@@ -119,24 +119,18 @@ const crack = byId('flagstone-walkway-curve');
   }
   .story__frame {
     position: relative;
-    margin: 0 18px 18px 0;
-  }
-  .story__frame::before {
-    content: '';
-    position: absolute;
-    inset: 18px -18px -18px 18px;
-    border: 3px solid var(--red);
-    z-index: 0;
+    overflow: hidden;
+    border-bottom: 6px solid var(--red);
   }
   .story__media :global(img) {
-    position: relative;
-    z-index: 1;
+    display: block;
     width: 100%;
     aspect-ratio: 4 / 5;
     object-fit: cover;
   }
   .story__media figcaption {
-    margin-top: 16px;
+    border-bottom: 0;
+    padding-bottom: 0;
   }
   .story h2 {
     font-size: clamp(40px, 5vw, 60px);
@@ -206,12 +200,6 @@ const crack = byId('flagstone-walkway-curve');
     }
     .story__media :global(img) {
       aspect-ratio: 4 / 3;
-    }
-    .story__frame {
-      margin: 0 10px 10px 0;
-    }
-    .story__frame::before {
-      inset: 10px -10px -10px 10px;
     }
   }
   @media (max-width: 600px) {
